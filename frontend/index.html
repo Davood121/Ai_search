@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered multi-engine search system with intelligent result synthesis">
+    <meta name="keywords" content="AI search, multi-engine search, intelligent search">
+    <title>Nexus AI Search - Intelligent Multi-Engine Search System</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="background">
+        <div class="stars"></div>
+        <div class="nebula"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">◈</span>
+                <h1 class="logo-text">NEXUS<span class="logo-ai">AI</span></h1>
+            </div>
+            <p class="tagline">Multi-Engine Intelligent Search System</p>
+        </header>
+
+        <!-- Search Interface -->
+        <section class="search-section">
+            <form id="searchForm" class="search-form">
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input"
+                        placeholder="Ask anything... AI will search across 5 engines" autocomplete="off" required>
+                    <button type="submit" class="search-button" id="searchBtn">
+                        <span class="button-text">Search</span>
+                        <span class="button-icon">→</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Holographic Process Visualization -->
+        <section id="hologramSection" class="hologram-section hidden">
+            <div class="hologram-container">
+                <canvas id="hologramCanvas"></canvas>
+
+                <!-- Process Status -->
+                <div class="process-status" id="processStatus">
+                    <div class="status-text" id="statusText">Initializing AI...</div>
+                </div>
+
+                <!-- Engine Nodes -->
+                <div class="engine-nodes" id="engineNodes">
+                    <div class="engine-node" data-engine="SearXNG">
+                        <div class="node-orb"></div>
+                        <span class="node-label">SearXNG</span>
+                        <span class="node-status">⟳</span>
+                    </div>
+                    <div class="engine-node" data-engine="DuckDuckGo">
+                        <div class="node-orb"></div>
+                        <span class="node-label">DuckDuckGo</span>
+                        <span class="node-status">⟳</span>
+                    </div>
+                    <div class="engine-node" data-engine="Qwant">
+                        <div class="node-orb"></div>
+                        <span class="node-label">Qwant</span>
+                        <span class="node-status">⟳</span>
+                    </div>
+                    <div class="engine-node" data-engine="Wikipedia">
+                        <div class="node-orb"></div>
+                        <span class="node-label">Wikipedia</span>
+                        <span class="node-status">⟳</span>
+                    </div>
+                    <div class="engine-node" data-engine="Wikidata">
+                        <div class="node-orb"></div>
+                        <span class="node-label">Wikidata</span>
+                        <span class="node-status">⟳</span>
+                    </div>
+                </div>
+
+                <!-- Sub-queries Display -->
+                <div class="sub-queries" id="subQueries"></div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="results-section hidden">
+            <!-- Summary Card -->
+            <div class="summary-card" id="summaryCard">
+                <h2 class="summary-title">AI Summary</h2>
+                <p class="summary-text" id="summaryText"></p>
+                <div class="summary-stats" id="summaryStats"></div>
+            </div>
+
+            <!-- Results Grid -->
+            <div class="results-grid" id="resultsGrid"></div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="hologram.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
