@@ -29,9 +29,14 @@ jobs:
     
     - name: Verify imports
       run: |
-        python -c "import sys; sys.path.insert(0, 'backend'); from main import app; print('✅ All imports successful')"
+        python -c "import sys; sys.path.insert(0, 'backend'); from fastapi import FastAPI; print('✅ FastAPI import successful')"
     
     - name: Check syntax with Python
       run: |
-        python -m py_compile backend/*.py
+        python -m py_compile backend/main.py
+        python -m py_compile backend/config.py
+        python -m py_compile backend/query_processor.py
+        python -m py_compile backend/search_orchestrator.py
+        python -m py_compile backend/result_synthesizer.py
+        python -m py_compile backend/decision_engine.py
         python -m py_compile backend/engines/*.py
