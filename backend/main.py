@@ -1,31 +1,45 @@
 """
 AI Multi-Engine Search System - Backend API
 Orchestrates parallel searches across 5 search engines with AI synthesis.
+With JWT authentication for security.
 """
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer, HTTPAuthCredentials
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
+import jwt
+import os
 
 from config import settings
 from query_processor import QueryProcessor
 from search_orchestrator import SearchOrchestrator
 from result_synthesizer import ResultSynthesizer
 
+# Security configuration
+SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production-12345!")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
+DEFAULT_API_KEY = os.getenv("API_KEY", "nexus-ai-search-default-key")
+
+security = HTTPBearer()
+
 
 app = FastAPI(
     title="AI Search Engine API",
     description="Multi-engine AI search with intelligent result synthesis",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url="/docs",  # Swagger UI
+    redoc_url="/redoc"  # ReDoc
 )
 
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url, "*"],  # Allow frontend
+    allow_origins=[settings.frontend_url, "http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,6 +49,18 @@ app.add_middleware(
 query_processor = QueryProcessor()
 search_orchestrator = SearchOrchestrator()
 result_synthesizer = ResultSynthesizer()
+
+
+class LoginRequest(BaseModel):
+    """Login request model."""
+    api_key: str
+
+
+class TokenResponse(BaseModel):
+    """Token response model."""
+    access_token: str
+    token_type: str
+    expires_in: int
 
 
 class SearchRequest(BaseModel):
@@ -53,28 +79,84 @@ class SearchResponse(BaseModel):
     processing_time: float
 
 
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    """Create JWT access token."""
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+def verify_token(credentials: HTTPAuthCredentials = Depends(security)) -> str:
+    """Verify JWT token."""
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload.get("sub")
+    except jwt.InvalidTokenError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
 @app.get("/")
 async def root():
-    """API root endpoint."""
+    """API root endpoint - Public."""
     return {
         "name": "AI Search Engine API",
         "version": "1.0.0",
         "status": "operational",
-        "engines": ["SearXNG", "DuckDuckGo", "Qwant", "Wikipedia", "Wikidata"]
+        "engines": ["SearXNG", "DuckDuckGo", "Qwant", "Wikipedia", "Wikidata"],
+        "security": "JWT Bearer Token Required for /search endpoint"
     }
 
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint."""
+    """Health check endpoint - Public."""
     return {
         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat()
     }
 
 
+@app.post("/login", response_model=TokenResponse)
+async def login(request: LoginRequest):
+    """
+    Login endpoint - Get JWT token using API key.
+    
+    Default API Key: nexus-ai-search-default-key
+    
+    You can change it by setting the API_KEY environment variable.
+    """
+    if request.api_key != DEFAULT_API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid API key"
+        )
+    
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": "nexus-user"},
+        expires_delta=access_token_expires
+    )
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60
+    }
+
+
 @app.post("/search", response_model=SearchResponse)
-async def search(request: SearchRequest):
+async def search(request: SearchRequest, token: str = Depends(verify_token)):
     """
     Perform multi-engine AI search.
     

@@ -2,10 +2,13 @@
 
 A powerful **AI-powered multi-engine search system** that orchestrates parallel searches across 5 different search engines with intelligent result synthesis using AI.
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115-brightgreen?style=flat-square&logo=fastapi)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
-![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)
+[![PyPI Version](https://img.shields.io/pypi/v/nexus-ai-search?style=flat-square&logo=pypi)](https://pypi.org/project/nexus-ai-search/)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-brightgreen?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)](https://github.com/Davood121/Ai_search)
+[![Security](https://img.shields.io/badge/Security-JWT%20Auth-blue?style=flat-square)](SECURITY.md)
+[![GitHub](https://img.shields.io/badge/GitHub-View%20Repo-black?style=flat-square&logo=github)](https://github.com/Davood121/Ai_search)
 
 ## ✨ Features
 
