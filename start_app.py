@@ -74,7 +74,8 @@ def run_frontend():
         print(f"❌ Frontend failed to start: {e}")
 
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for the application."""
     print("\n")
     print("╔" + "="*58 + "╗")
     print("║" + " "*10 + "🚀 NEXUS AI SEARCH ENGINE LAUNCHER" + " "*14 + "║")
@@ -126,4 +127,8 @@ if __name__ == "__main__":
         backend_process.join(timeout=5)
         frontend_process.join(timeout=5)
         print("✅ All servers stopped. Goodbye!")
+
+
+if __name__ == "__main__":
+    main()
 
